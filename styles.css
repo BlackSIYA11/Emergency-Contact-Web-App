@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 40px;
+}
+#contact-form input {
+    margin: 5px;
+}
+#contacts-list {
+    list-style: none;
+    padding: 0;
+}
