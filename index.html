@@ -3,21 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Emergency Contacts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>My Emergency Contacts</h1>
+
+    <header>
+        <h1>My Emergency Contacts</h1>
+        <img src="_images/web app logo.jpeg" alt="Web logo" width="100px" height="50px">
+    </header>
 
     <div id="contact-form">
-        <input type="text" id="name" placeholder="Name">
-        <input type="text" id="relation" placeholder="Relation">
-        <input type="tel" id="phone" placeholder="Phone">
-        <button onclick="addContact()">Add</button>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="text" id="relation" placeholder="Relation (e.g., Mom, Doctor)" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <button id="add-btn">➕ Add Contact</button>
+        <button id="display-btn">📋 Display Contacts</button>
+        <button id="close-btn">📋 Close Contacts</button>
+
     </div>
 
     <ul id="contacts-list"></ul>
 
-    <button onclick="sendPanic()">🚨 Panic Button</button>
+    <button class="panic-button" onclick="sendPanic()">🚨 Panic</button>
 
     <script src="script.js"></script>
 </body>
