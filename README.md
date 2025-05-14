@@ -5,7 +5,7 @@ A simple yet powerful web application designed to help users manage and access e
 Problem Statement
 In critical situations, every second counts. Disorganized or inaccessible emergency information can delay help. This app addresses that problem by providing a streamlined, always-accessible interface to store emergency contacts and share real-time location during emergencies.
 
-✅ Key Features
+✅ Key Features: 
 📍 Panic Alert System
 Instantly send a panic alert that captures your live location using the browser's geolocation API.
 
