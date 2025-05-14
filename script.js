@@ -12,21 +12,41 @@ function addContact() {
         return;
     }
 
-    const varOcg = { name, relation, phone };
-
-    if (editIndex === -1) {
-        contacts.push(varOcg); // Add new
-        alert("Contact added successfully!");
-    } else {
-        contacts[editIndex] = varOcg; // Edit existing
-        editIndex = -1;
-        alert("Contact updated!");
-        document.getElementById("add-btn").textContent = "➕ Add Contact";
+    // Validate phone number format: +27 followed by 9 digits
+    const phonePattern = /^\+27\d{9}$/;
+    if (!phonePattern.test(phone)) {
+        alert("Phone number must start with +27 and be followed by 9 digits (e.g., +27123456789)");
+        return;
     }
 
-    clearForm();
-    displayContacts();
+    const contact = { name, relation, phone };
+
+    fetch('http://localhost:3000/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contact)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Contact saved to database!");
+        clearForm();
+        fetchContacts(); // Refresh list from DB
+    })
+    .catch(err => console.error('Error saving contact:', err));
 }
+
+
+function fetchContacts() {
+    fetch('http://localhost:3000/contacts')
+        .then(res => res.json())
+        .then(data => {
+            console.log("Fetched contacts:", data); // This fetches the contacts
+            contacts = data;
+            displayContacts();
+        })
+        .catch(err => console.error('Error fetching contacts:', err));
+}
+
 
 // Display contact list
 function displayContacts() {
@@ -63,11 +83,21 @@ function editContact(index) {
 
 // Delete contact
 function deleteContact(index) {
+    const contactId = contacts[index]._id;
+
     if (confirm("Are you sure you want to delete this contact?")) {
-        contacts.splice(index, 1);
-        displayContacts();
+        fetch(`http://localhost:3000/contacts/${contactId}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            fetchContacts(); // Refresh the contact list
+        })
+        .catch(err => console.error('Error deleting contact:', err));
     }
 }
+
 
 // Clear form
 function clearForm() {
@@ -84,16 +114,19 @@ function closeContacts() {
 // Panic button
 function sendPanic() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            alert(`🚨 Panic alert sent!\nLatitude: ${position.coords.latitude}\nLongitude: ${position.coords.longitude}`);
-            // Send info via API to alert contacts
-        }, () => {
-            alert("Unable to get location.");
-        });
+        navigator.geolocation.watchPosition(
+            position => {
+                alert(`🚨 Panic alert sent!\nLatitude: ${position.coords.latitude}\nLongitude: ${position.coords.longitude}`);
+            },
+            () => {
+                alert("Unable to get location.");
+            }
+        );
     } else {
         alert("Geolocation is not supported by this browser.");
     }
 }
+
 
 // Event listeners
 document.getElementById("add-btn").addEventListener("click", addContact);
