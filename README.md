@@ -1,31 +1,51 @@
-# Emergency-Contact-Web-App
+Emergency-Contact-Web-App
+A simple yet powerful web application designed to help users manage and access emergency contact information quickly and efficiently. This app offers a centralized platform to store contacts and initiate emergency responses with real-time geolocation (coordinates) sharing.
 
-A simple yet powerful web application designed to help users manage and access emergency contact information quickly and efficiently. This app offers a centralized platform to store contacts and initiate emergency responses with real-time geolocation(co-ordinates) sharing.
+🚨 Problem Statement
+In critical situations, every second counts. Disorganized or inaccessible emergency information can delay help. This app solves that by offering a streamlined, always-accessible interface to store emergency contacts and share live location during emergencies.
 
-Problem Statement
-In critical situations, every second counts. Disorganized or inaccessible emergency information can delay help. This app addresses that problem by providing a streamlined, always-accessible interface to store emergency contacts and share real-time location during emergencies.
-
-✅ Key Features: 
+✅ Key Features:
 📍 Panic Alert System
-Instantly send a panic alert that captures your live location using the browser's geolocation API.
+Instantly send a panic alert that captures your live location using the browser’s Geolocation API.
 
 👥 Contact Management
-Add, edit, and delete emergency contacts, each with a name, relation, and phone number.
+Add, edit, and delete emergency contacts — each with a name, relationship, and phone number.
 
 🧭 Geolocation Sharing
-Shares precise GPS coordinates to enhance the effectiveness of emergency communication.
+Shares accurate GPS coordinates in real time to support efficient emergency response.
 
-🔄 Real-time Sync
-Built with RESTful API integration to enable smooth interaction with the backend (Node.js + MongoDB).
+🔄 Real-Time Sync
+Powered by RESTful APIs for seamless frontend-backend communication. Now running on a Nodemon-enabled Node.js + Express.js backend for faster development and hot reloading.
 
 🧱 Clean UI & Interactive List
-Dynamic display of contacts with edit/delete buttons, form handling, and conditional visibility.
+Dynamic rendering of contacts with edit/delete options, form validation, and smooth user interactions.
 
-Tech Stack
-Frontend: HTML, CSS, JavaScript (Vanilla)
+⚙️ Tech Stack
+Frontend:
 
-Backend: Node.js + Express.js
+HTML
 
-Database: MongoDB (Mongoose)
+CSS
 
-Others: REST API, Browser Geolocation API, Fetch API
+JavaScript (Vanilla)
+
+Backend:
+
+Node.js
+
+Express.js
+
+Nodemon (for automatic server restarts during development)
+
+Database:
+
+MongoDB (via Mongoose ODM)
+
+APIs & Tools:
+
+REST API
+
+Fetch API
+
+Browser Geolocation API
+
