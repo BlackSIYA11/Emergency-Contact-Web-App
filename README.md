@@ -1,6 +1,6 @@
 # Emergency-Contact-Web-App
 
-A simple yet powerful web application designed to help users manage and access emergency contact information quickly and efficiently. This app offers a centralized platform to store contacts and initiate emergency responses with real-time geolocation sharing.
+A simple yet powerful web application designed to help users manage and access emergency contact information quickly and efficiently. This app offers a centralized platform to store contacts and initiate emergency responses with real-time geolocation(co-ordinates) sharing.
 
 Problem Statement
 In critical situations, every second counts. Disorganized or inaccessible emergency information can delay help. This app addresses that problem by providing a streamlined, always-accessible interface to store emergency contacts and share real-time location during emergencies.
