@@ -28,7 +28,7 @@ HTML
 
 CSS
 
-JavaScript (Vanilla)
+JavaScript
 
 Backend:
 
