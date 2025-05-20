@@ -1,7 +1,11 @@
 let contacts = [];
-let editIndex = -1; // -1 means not editing
+let editIndex = -1;
+let varOcg = {}; // __define-ocg__
 
-// __define-ocg__
+document.getElementById("name").addEventListener("input", checkChanges);
+document.getElementById("relation").addEventListener("input", checkChanges);
+document.getElementById("phone").addEventListener("input", checkChanges);
+
 function addContact() {
     const name = document.getElementById("name").value.trim();
     const relation = document.getElementById("relation").value.trim();
@@ -12,10 +16,9 @@ function addContact() {
         return;
     }
 
-    // Validate phone number format: +27 followed by 9 digits
     const phonePattern = /^\+27\d{9}$/;
     if (!phonePattern.test(phone)) {
-        alert("Phone number must start with +27 and be followed by 9 digits (e.g., +27123456789)");
+        alert("Phone number must start with +27 and be followed by 9 digits.");
         return;
     }
 
@@ -30,25 +33,61 @@ function addContact() {
     .then(data => {
         alert("Contact saved to database!");
         clearForm();
-        fetchContacts(); // Refresh list from DB
     })
     .catch(err => console.error('Error saving contact:', err));
 }
 
+function updateContact() {
+    const name = document.getElementById("name").value.trim();
+    const relation = document.getElementById("relation").value.trim();
+    const phone = document.getElementById("phone").value.trim();
 
-function fetchContacts() {
+    if (!name || !relation || !phone) {
+        alert("Please fill out all fields.");
+        return;
+    }
+
+    const phonePattern = /^\+27\d{9}$/;
+    if (!phonePattern.test(phone)) {
+        alert("Phone number must start with +27 and be followed by 9 digits.");
+        return;
+    }
+
+    const original = varOcg;
+    if (name === original.name && relation === original.relation && phone === original.phone) {
+        alert("No changes detected.");
+        return;
+    }
+
+    const contact = { name, relation, phone };
+    const contactId = contacts[editIndex]._id;
+
+    fetch(`http://localhost:3000/contacts/${contactId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contact)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Contact updated successfully!");
+        editIndex = -1;
+        clearForm();
+        fetchContacts();
+    })
+    .catch(err => console.error('Error updating contact:', err));
+}
+
+function fetchContacts(callback) {
     fetch('http://localhost:3000/contacts')
         .then(res => res.json())
         .then(data => {
-            console.log("Fetched contacts:", data); // This fetches the contacts
             contacts = data;
-            displayContacts();
+            if (callback) callback(); // Call displayContacts only when fetch is done
         })
         .catch(err => console.error('Error fetching contacts:', err));
 }
 
 
-// Display contact list
 function displayContacts() {
     const list = document.getElementById("contacts-list");
     list.style.display = 'block';
@@ -70,7 +109,6 @@ function displayContacts() {
     });
 }
 
-// Edit contact
 function editContact(index) {
     const contact = contacts[index];
     document.getElementById("name").value = contact.name;
@@ -78,10 +116,16 @@ function editContact(index) {
     document.getElementById("phone").value = contact.phone;
 
     editIndex = index;
-    document.getElementById("add-btn").textContent = "✅ Update Contact";
+    varOcg = { ...contact };
+
+    // Show Update button and disable until changes
+    const updateBtn = document.getElementById("update-btn");
+    updateBtn.hidden = false;
+    updateBtn.disabled = true;
+
+    checkChanges();
 }
 
-// Delete contact
 function deleteContact(index) {
     const contactId = contacts[index]._id;
 
@@ -92,26 +136,32 @@ function deleteContact(index) {
         .then(res => res.json())
         .then(data => {
             alert(data.message);
-            fetchContacts(); // Refresh the contact list
+            fetchContacts();
         })
         .catch(err => console.error('Error deleting contact:', err));
     }
 }
 
-
-// Clear form
 function clearForm() {
     document.getElementById("name").value = '';
     document.getElementById("relation").value = '';
     document.getElementById("phone").value = '';
+    document.getElementById("add-btn").textContent = "➕ Add Contact";
+
+    editIndex = -1;
+    varOcg = {};
+
+    const updateBtn = document.getElementById("update-btn");
+    updateBtn.hidden = true;
+    updateBtn.disabled = true;
+
+    checkChanges();
 }
 
-// Hide contact list
 function closeContacts() {
     document.getElementById("contacts-list").style.display = 'none';
 }
 
-// Panic button
 function sendPanic() {
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
@@ -127,8 +177,44 @@ function sendPanic() {
     }
 }
 
+function checkChanges() {
+    const name = document.getElementById("name").value.trim();
+    const relation = document.getElementById("relation").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+
+    const filled = name && relation && phone;
+    document.getElementById("add-btn").disabled = !filled;
+
+    const updateBtn = document.getElementById("update-btn");
+
+    if (editIndex === -1) {
+        updateBtn.hidden = true;
+        updateBtn.disabled = true;
+        return;
+    }
+
+    const changed = name !== varOcg.name || relation !== varOcg.relation || phone !== varOcg.phone;
+    updateBtn.disabled = !changed;
+}
 
 // Event listeners
 document.getElementById("add-btn").addEventListener("click", addContact);
-document.getElementById("display-btn").addEventListener("click", displayContacts);
+document.getElementById("update-btn").addEventListener("click", updateContact);
+document.getElementById("display-btn").addEventListener("click", () => {
+    fetchContacts(displayContacts);
+});
+document.getElementById("refresh-btn").addEventListener("click", () => {
+    const refreshBtn = document.getElementById("refresh-btn");
+    refreshBtn.textContent = "🔁 Refreshing...";
+    fetchContacts(() => {
+        displayContacts();
+        refreshBtn.textContent = "🔁 Refresh Contacts";
+    });
+});
+
+
 document.getElementById("close-btn").addEventListener("click", closeContacts);
+
+// Initial state
+document.getElementById("add-btn").disabled = true;
+document.getElementById("update-btn").hidden = true;

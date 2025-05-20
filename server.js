@@ -69,4 +69,24 @@ app.delete('/contacts/:id', async (req, res) => {
     }
 });
 
+// Update contact by ID
+app.put('/contacts/:id', async (req, res) => {
+    try {
+        const updatedContact = await Contact.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedContact) {
+            return res.status(404).json({ message: 'Contact not found' });
+        }
+
+        res.json({ message: 'Contact updated successfully', contact: updatedContact });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 app.listen(3000, () => console.log('🚀 Server running on http://localhost:3000'));
